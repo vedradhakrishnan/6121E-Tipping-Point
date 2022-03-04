@@ -23,6 +23,7 @@ const int DRIVE_PID = 0;
 const int DRIVE_CONST = 1;
 const int DRIVE_TRAP = 2;
 const int DRIVE_BRAKE = 3;
+const int DRIVE_GYRO = 4;
 
 
 //measurmeants
@@ -181,6 +182,15 @@ void arc_pid(double radius, double kims, int power) {
 	rot_target = kims;
 }
 
+void turn_gyro(double kims, int power) {
+	chassis_mode = DRIVE_GYRO;
+	max_power = power;
+
+	int e_units = (9 * kims * CHASSIS_WIDTH) / (WHEEL_DIAMETER * DRIVE_GEAR_RATIO);
+	reset_targeting(e_units, -e_units);
+	rot_target = kims;
+}
+
 void drive_brake() {
 	chassis_mode = DRIVE_BRAKE;
 	brake_timer = 0;
@@ -330,6 +340,22 @@ void chassis_auton() {
 			left_power = left_dir * fabs(left_power / right_power) * max_power;
 			// left_power = left_dir * fabs((double)(left_target) / right_target) * max_power;
 			right_power = right_dir * max_power;
+		}
+	} else if (chassis_mode == DRIVE_GYRO) {
+		int turn_dir = fabs(rot_target) / rot_target;
+		const int MIN_POW = 20;
+		const double RATIO = 0.5;
+
+		if (fabs(rot_target) / fabs(chassis_rot()) < RATIO) {
+			left_power = turn_dir * max_power;
+			right_power = -turn_dir * max_power;
+		} else if (fabs(chassis_rot()) < fabs(rot_target)) {
+			left_power = turn_dir * max_power;
+			right_power = -turn_dir * max_power;
+		} else {
+			drive_brake();
+			left_power = -10 * max_power;
+			right_power = 10 * max_power;
 		}
 
 	} else if (chassis_mode == DRIVE_BRAKE) {

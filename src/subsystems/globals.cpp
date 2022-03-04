@@ -21,4 +21,4 @@ Motor conveyor(10, E_MOTOR_GEARSET_18, false, E_MOTOR_ENCODER_COUNTS);
 
 Controller controller(E_CONTROLLER_MASTER);
 
-Imu inertial(14);
+Imu inertial(8);

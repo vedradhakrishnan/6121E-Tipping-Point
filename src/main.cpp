@@ -38,7 +38,7 @@ void initialize() {
 	// while (inertial.is_calibrating()) {
 	// 	delay(10);
 	// }
-	// delay(2000);
+	delay(2000);
 
 	//RESET NECESARY ENCODERS
 	front_clamp.tare_position();
@@ -73,12 +73,12 @@ void disabled() { /* ~crickets~ */ }
 void competition_initialize() { /* ~more crickets~ */ }
 
 void autonomous() {
-	// delay(3000); //need this if not comp switch
+	delay(3000); //need this if not comp switch
 	// lcd::set_text(2, "AMIL IS A CARTI STAN");
 
 	// left_win_point();
-	// right_win_point();
-	left_compound_rush();
+	right_win_point();
+	// left_compound_rush();
 
 	// delay(15000);
 

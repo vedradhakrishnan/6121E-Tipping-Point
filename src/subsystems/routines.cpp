@@ -57,19 +57,19 @@ void auton_skills() {
 
 void left_compound_rush() {
   front_clamp_up();
-  straight_const(50.0, 120);
-  delay(2300);
+  straight_const(38.0, 120);
+  delay(1800);
 
   front_clamp_down();
   delay(200);
 
-  straight_pid(-32.0, 100);
+  straight_pid(-34.0, 100);
   delay(300);
 
   bar_lift_pos(1800, 200);
   delay(2000);
 
-  turn_pid(12.5, 120);
+  turn_const(-22.5, 120);
   delay(2300);
 
   straight_pid(-15.0, 100);
@@ -105,19 +105,8 @@ void left_win_point() {
 }
 
 void right_win_point() {
-  front_clamp_down();
-  straight_trap(12.0, 60, 800);
-  bar_lift_pos(1000, 200);
-
+  turn_gyro(25.0, 120);
   delay(1000);
 
-  turn_trap(12.0, 60, 800);
-
-  delay(1000);
-
-  straight_trap(18.0, 60, 800);
-
-  delay(1500);
-
-  front_clamp_up();
+  turn_gyro(-50.0, 120);
 }

@@ -57,6 +57,8 @@ void turn_pid(double kims, int power);
 
 void arc_pid(double radius, double kims, int power);
 
+void turn_gyro(double kims, int power);
+
 void drive_brake();
 
 void chassis_auton();
