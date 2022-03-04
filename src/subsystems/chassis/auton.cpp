@@ -6,6 +6,7 @@
 //CONSTANTS
 //voltage setting
 const int DRIVE_BRAKE_TIME = 40;
+int brake_timer = 0;
 
 const int MAX_STRAIGHT_VOLTAGE = 110;
 const int MAX_TURN_VOLTAGE = 80;
@@ -21,7 +22,7 @@ const double IMU_SCALE = 30.0;
 const int DRIVE_PID = 0;
 const int DRIVE_CONST = 1;
 const int DRIVE_TRAP = 2;
-const int DRIVE_LOCK = 3;
+const int DRIVE_BRAKE = 3;
 
 
 //measurmeants
@@ -180,6 +181,11 @@ void arc_pid(double radius, double kims, int power) {
 	rot_target = kims;
 }
 
+void drive_brake() {
+	chassis_mode = DRIVE_BRAKE;
+	brake_timer = 0;
+}
+
 void chassis_auton() {
 	left_pos = left_chassis_pos();
 	right_pos = right_chassis_pos();
@@ -200,6 +206,7 @@ void chassis_auton() {
 				left_power = left_dir * max_power * (abs(left_target) / fabs((double)(right_target)));
 			}
 		} else {
+			drive_brake();
 			left_power = -10 * left_dir;
 			right_power = -10 * right_dir;
 		}
@@ -215,6 +222,7 @@ void chassis_auton() {
 				left_power = left_dir * max_power * (abs(left_target) / fabs((double)(right_target)));
 			}
 		} else {
+			drive_brake();
 			left_power = -10 * left_dir;
 			right_power = -10 * right_dir;
 		}
@@ -248,6 +256,7 @@ void chassis_auton() {
 			left_power =  left_scale * left_dir * power;
 			right_power =  right_scale * right_dir * power;
 		} else {
+			drive_brake();
 			left_power = -10 * left_dir;
 			right_power = -10 * right_dir;
 		}
@@ -308,6 +317,10 @@ void chassis_auton() {
 			right_power = -10 * right_dir;
 		}
 
+		if (fabs(left_power) + fabs(right_power) <= 20) {
+			drive_brake();
+		}
+
 		//limits
 		if (fabs(left_power) > fabs(right_power) && fabs(left_power) > max_power) {
 			right_power = right_dir * fabs(right_power / left_power) * max_power;
@@ -318,6 +331,20 @@ void chassis_auton() {
 			// left_power = left_dir * fabs((double)(left_target) / right_target) * max_power;
 			right_power = right_dir * max_power;
 		}
+
+	} else if (chassis_mode == DRIVE_BRAKE) {
+		int right_dir = right_target / abs(right_target);
+		int left_dir = left_target / abs(left_target);
+
+		if (brake_timer <= DRIVE_BRAKE_TIME) {
+			left_power = -10 * left_dir;
+			right_power = -10 * right_dir;
+		} else {
+			left_power = 0;
+			right_power = 0;
+		}
+
+		brake_timer += 10;
 	}
 
 

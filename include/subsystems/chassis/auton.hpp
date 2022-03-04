@@ -14,7 +14,7 @@ extern const int GYRO_COMPENSATE;
 extern const int DRIVE_PID;
 extern const int DRIVE_CONST;
 extern const int DRIVE_TRAP;
-extern const int DRIVE_LOCK;
+extern const int DRIVE_BRAKE;
 
 
 //measurmeants
@@ -56,5 +56,7 @@ void straight_pid(double inches, int power);
 void turn_pid(double kims, int power);
 
 void arc_pid(double radius, double kims, int power);
+
+void drive_brake();
 
 void chassis_auton();
